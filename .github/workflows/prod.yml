@@ -6,8 +6,8 @@ on:
   #   types: published
 
 env:
-  DOCKER_IMAGE: wire-bot/support
-  SERVICE_NAME: support-bot
+  DOCKER_IMAGE: wire-bot/narvi
+  SERVICE_NAME: narvi
 
 jobs:
   deploy:
