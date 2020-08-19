@@ -13,7 +13,7 @@ plugins {
 group = "com.wire.bots"
 version = versioning.info.lastTag + if(versioning.info.dirty) "-dirty" else ""
 
-val mClass = "com.wire.bots.narvi.Service"
+val mClass = "com.wire.bots.narvi.ServiceKt"
 
 repositories {
     jcenter()
