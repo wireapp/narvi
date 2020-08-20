@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:12.2
+    container_name: simulation-db
+    environment:
+      - POSTGRES_USER=wire-narvi
+      - POSTGRES_PASSWORD=super-secret-wire-pwd
+      - POSTGRES_DB=narvi
+    ports:
+      - 5432:5432
+    volumes:
+      - narvi-db:/var/lib/postgresql/data/
+
+volumes:
+  narvi-db:

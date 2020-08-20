@@ -1,7 +1,3 @@
-import org.jetbrains.kotlin.konan.file.File
-import org.jetbrains.kotlin.konan.properties.saveToFile
-import java.util.Properties
-
 plugins {
     java
     kotlin("jvm") version "1.4.0"
@@ -13,7 +9,7 @@ plugins {
 group = "com.wire.bots"
 version = versioning.info.lastTag + if(versioning.info.dirty) "-dirty" else ""
 
-val mClass = "com.wire.bots.narvi.ServiceKt"
+val mClass = "com.wire.bots.narvi.MainKt"
 
 repositories {
     jcenter()
@@ -31,8 +27,7 @@ repositories {
 
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("pw.forst.tools", "katlib", "1.0.0")
+    implementation("pw.forst.tools", "katlib", "1.1.0")
 
     implementation("com.wire.bots", "lithium", "2.36.2") {
         // we're replacing it with newer version as the one included in Lithium has problems with JRE 11
@@ -41,6 +36,16 @@ dependencies {
     implementation("com.google.protobuf", "protobuf-java", "3.12.4")
 
     implementation("io.github.microutils", "kotlin-logging", "1.7.9")
+
+    val kodeinVersion = "6.5.5"
+    implementation("org.kodein.di", "kodein-di-generic-jvm", kodeinVersion)
+
+    // database
+    val exposedVersion = "0.26.1"
+    implementation("org.jetbrains.exposed", "exposed-core", exposedVersion)
+    implementation("org.jetbrains.exposed", "exposed-dao", exposedVersion)
+    implementation("org.jetbrains.exposed", "exposed-jdbc", exposedVersion)
+    implementation("org.jetbrains.exposed", "exposed-java-time", exposedVersion)
 
     // testing
     val junitVersion = "5.6.2"

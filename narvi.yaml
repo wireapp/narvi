@@ -1,0 +1,44 @@
+server:
+  requestLog:
+    appenders:
+      - type: ${APPENDER_TYPE:-console}
+        filterFactories:
+          - type: status-filter-factory
+
+logging:
+  level: INFO
+  appenders:
+    - type: ${APPENDER_TYPE:-console}
+  loggers:
+    "com.wire.bots.logger": ${LOG_LEVEL:-INFO}
+
+apiHost: ${WIRE_API_HOST:-https://staging-nginz-https.zinfra.io}
+wsHost:  ${WIRE_WS_HOST:-wss://staging-nginz-ssl.wire.com/await}
+
+database:
+  driverClass: ${DB_DRIVER:-org.postgresql.Driver}
+  url: ${DB_URL:-jdbc:postgresql://localhost:5432/narvi}
+  user: ${DB_USER:-wire-narvi}
+  password: ${DB_PASSWORD:-super-secret-wire-pwd}
+
+userMode:
+  email: ${EMAIL:-}
+  password: ${PASSWORD:-}
+
+jerseyClient:
+  timeout: 4s
+  connectionTimeout: 2s
+  connectionRequestTimeout: 2s
+  keepAlive: 0ms
+  retries: 3
+  userAgent: Narvi
+
+  tls:
+    protocol: TLSv1.2
+    provider: SunJSSE
+    verifyHostname: false
+    keyStoreType: JKS
+    trustSelfSignedCertificates: true
+    supportedProtocols:
+      - TLSv1.1
+      - TLSv1.2
