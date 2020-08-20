@@ -14,6 +14,11 @@ data class AddCommentRequest(
     val comment: String
 )
 
+data class CloseIssueRequest(
+    val repository: String,
+    val issueId: String
+)
+
 data class CreatedResource(
     val id: String,
     val link: URL
