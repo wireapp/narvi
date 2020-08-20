@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.kohsuke.github.GitHub
 import org.kohsuke.github.GitHubBuilder
+import pw.forst.tools.katlib.propertiesFromResources
 import java.time.Instant
-import java.util.Properties
 import java.util.UUID
 
 internal class GithubIssueTrackerTest {
@@ -17,9 +17,7 @@ internal class GithubIssueTrackerTest {
     private companion object : KLogging()
 
     private val props by lazy {
-        Properties().apply {
-            load(javaClass.getResourceAsStream("/secret.properties"))
-        }
+        requireNotNull(propertiesFromResources("/secret.properties"))
     }
 
     private val token by lazy { props.getProperty("github.testing.token") }

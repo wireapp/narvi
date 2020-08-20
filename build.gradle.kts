@@ -27,7 +27,7 @@ repositories {
 
 
 dependencies {
-    implementation("pw.forst.tools", "katlib", "1.1.0")
+    implementation("pw.forst.tools", "katlib", "1.1.1")
 
     implementation("com.wire.bots", "lithium", "2.36.2") {
         // we're replacing it with newer version as the one included in Lithium has problems with JRE 11
