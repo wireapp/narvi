@@ -13,7 +13,7 @@ logging:
     "com.wire.bots.logger": ${LOG_LEVEL:-INFO}
 
 apiHost: ${WIRE_API_HOST:-https://staging-nginz-https.zinfra.io}
-wsHost:  ${WIRE_WS_HOST:-wss://staging-nginz-ssl.wire.com/await}
+wsHost:  ${WIRE_WS_HOST:-wss://staging-nginz-ssl.zinfra.io}
 
 database:
   driverClass: ${DB_DRIVER:-org.postgresql.Driver}

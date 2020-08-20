@@ -34,14 +34,19 @@ dependencies {
         exclude("com.google.protobuf", "protobuf-java")
     }
     implementation("com.google.protobuf", "protobuf-java", "3.12.4")
+    // because jackson kotlin have a bit older lib
+    implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", "2.11.2")
+    implementation("org.jetbrains.kotlin", "kotlin-reflect", "1.4.0")
 
+    // logging
     implementation("io.github.microutils", "kotlin-logging", "1.7.9")
-
-    val kodeinVersion = "6.5.5"
-    implementation("org.kodein.di", "kodein-di-generic-jvm", kodeinVersion)
+    // github api
+    implementation("org.kohsuke", "github-api", "1.116")
+    // DI container
+    implementation("org.kodein.di", "kodein-di-generic-jvm", "6.5.5")
 
     // database
-    val exposedVersion = "0.26.1"
+    val exposedVersion = "0.26.2"
     implementation("org.jetbrains.exposed", "exposed-core", exposedVersion)
     implementation("org.jetbrains.exposed", "exposed-dao", exposedVersion)
     implementation("org.jetbrains.exposed", "exposed-jdbc", exposedVersion)

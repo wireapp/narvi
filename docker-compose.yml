@@ -3,7 +3,6 @@ version: '3.7'
 services:
   db:
     image: postgres:12.2
-    container_name: simulation-db
     environment:
       - POSTGRES_USER=wire-narvi
       - POSTGRES_PASSWORD=super-secret-wire-pwd
