@@ -11,8 +11,7 @@ import java.util.UUID
 class MessageHandler : MessageHandlerBase() {
 
     private companion object : KLogging()
-
-
+    
     override fun onEvent(client: WireClient, userId: UUID, genericMessage: Messages.GenericMessage) {
         super.onEvent(client, userId, genericMessage)
         logger.info { "New event: $genericMessage" }

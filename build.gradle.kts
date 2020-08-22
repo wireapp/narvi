@@ -35,8 +35,9 @@ dependencies {
     }
     implementation("com.google.protobuf", "protobuf-java", "3.12.4")
     // because jackson kotlin have a bit older lib
-    implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", "2.11.2")
-    implementation("org.jetbrains.kotlin", "kotlin-reflect", "1.4.0")
+//    implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", "2.11.2")
+//    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.11.2")
+//    implementation("org.jetbrains.kotlin", "kotlin-reflect", "1.4.0")
 
     // logging
     implementation("io.github.microutils", "kotlin-logging", "1.7.9")
