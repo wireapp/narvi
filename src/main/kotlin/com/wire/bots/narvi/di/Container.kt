@@ -4,6 +4,8 @@ import com.wire.bots.narvi.db.IssuesService
 import com.wire.bots.narvi.db.UsernamesService
 import com.wire.bots.narvi.dispatch.ActionDispatcher
 import com.wire.bots.narvi.dispatch.SynchronousActionDispatcher
+import com.wire.bots.narvi.processor.CommandsProcessor
+import com.wire.bots.narvi.processor.DummyCommandsProcessor
 import com.wire.bots.narvi.server.MessageHandler
 import com.wire.bots.narvi.server.NarviService
 import com.wire.bots.narvi.tracking.AggregatingIssueTracker
@@ -23,7 +25,7 @@ val kodein = Kodein {
     bind() from singleton { UsernamesService() }
 
     // server
-    bind() from singleton { MessageHandler() }
+    bind() from singleton { MessageHandler(instance(), instance()) }
     bind<NarviService>() with singleton { NarviService(instance()) }
 
     // tracking
@@ -40,4 +42,7 @@ val kodein = Kodein {
     // dispatcher
     bind() from singleton { SynchronousActionDispatcher(instance()) }
     bind<ActionDispatcher>() with singleton { instance<SynchronousActionDispatcher>() }
+    // command processor
+    bind() from singleton { DummyCommandsProcessor() }
+    bind<CommandsProcessor>() with singleton { instance<DummyCommandsProcessor>() }
 }

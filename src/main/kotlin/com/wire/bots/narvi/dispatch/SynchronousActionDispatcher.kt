@@ -9,6 +9,9 @@ class SynchronousActionDispatcher(
 
     private companion object : KLogging()
 
+    override fun dispatch(actions: Collection<Action>) =
+        actions.forEach { dispatch(it) }
+
     override fun dispatch(action: Action): Unit =
         when (action) {
             is SendTextAction -> sendTextAction(action)

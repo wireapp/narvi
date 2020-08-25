@@ -1,5 +1,6 @@
 package com.wire.bots.narvi.tracking.github
 
+import com.wire.bots.narvi.db.model.IssueTracker
 import com.wire.bots.narvi.tracking.AddCommentRequest
 import com.wire.bots.narvi.tracking.CloseIssueRequest
 import com.wire.bots.narvi.tracking.CreateIssueRequest
@@ -37,7 +38,8 @@ internal class GithubIssueTrackerTest {
                 CreateIssueRequest(
                     personalRepo,
                     "Title - ${UUID.randomUUID()}",
-                    "Body - some body"
+                    "Body - some body",
+                    IssueTracker.GITHUB
                 )
             )
         logger.info { result }
@@ -51,7 +53,8 @@ internal class GithubIssueTrackerTest {
                 CreateIssueRequest(
                     orgRepo,
                     "Test",
-                    "Test"
+                    "Test",
+                    IssueTracker.GITHUB
                 )
             )
         logger.info { result }
@@ -66,7 +69,8 @@ internal class GithubIssueTrackerTest {
                 AddCommentRequest(
                     personalRepo,
                     "1",
-                    "Cool comment sent on ${Instant.now()}"
+                    "Cool comment sent on ${Instant.now()}",
+                    IssueTracker.GITHUB
                 )
             )
         logger.info { result }
@@ -79,7 +83,8 @@ internal class GithubIssueTrackerTest {
             .closeIssue(
                 CloseIssueRequest(
                     personalRepo,
-                    "1"
+                    "1",
+                    IssueTracker.GITHUB
                 )
             )
     }
