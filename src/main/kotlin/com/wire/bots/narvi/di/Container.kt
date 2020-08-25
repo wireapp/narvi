@@ -2,6 +2,8 @@ package com.wire.bots.narvi.di
 
 import com.wire.bots.narvi.db.IssuesService
 import com.wire.bots.narvi.db.UsernamesService
+import com.wire.bots.narvi.processor.ActionDispatcher
+import com.wire.bots.narvi.processor.SynchronousActionDispatcher
 import com.wire.bots.narvi.server.MessageHandler
 import com.wire.bots.narvi.server.NarviService
 import com.wire.bots.narvi.tracking.AggregatingIssueTracker
@@ -34,4 +36,8 @@ val kodein = Kodein {
     bind() from singleton { AggregatingIssueTracker(instance()) }
     // select default tracking system
     bind<IssueTracker>() with singleton { instance<AggregatingIssueTracker>() }
+
+    // dispatcher
+    bind() from singleton { SynchronousActionDispatcher(instance()) }
+    bind<ActionDispatcher>() with singleton { instance<SynchronousActionDispatcher>() }
 }
