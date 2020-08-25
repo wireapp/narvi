@@ -1,4 +1,4 @@
-package com.wire.bots.narvi.processor
+package com.wire.bots.narvi.dispatch
 
 interface ActionDispatcher {
 

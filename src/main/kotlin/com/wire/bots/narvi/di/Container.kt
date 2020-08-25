@@ -2,8 +2,8 @@ package com.wire.bots.narvi.di
 
 import com.wire.bots.narvi.db.IssuesService
 import com.wire.bots.narvi.db.UsernamesService
-import com.wire.bots.narvi.processor.ActionDispatcher
-import com.wire.bots.narvi.processor.SynchronousActionDispatcher
+import com.wire.bots.narvi.dispatch.ActionDispatcher
+import com.wire.bots.narvi.dispatch.SynchronousActionDispatcher
 import com.wire.bots.narvi.server.MessageHandler
 import com.wire.bots.narvi.server.NarviService
 import com.wire.bots.narvi.tracking.AggregatingIssueTracker

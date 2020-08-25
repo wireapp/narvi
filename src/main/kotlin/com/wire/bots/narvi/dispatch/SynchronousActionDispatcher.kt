@@ -1,4 +1,4 @@
-package com.wire.bots.narvi.processor
+package com.wire.bots.narvi.dispatch
 
 import com.wire.bots.narvi.tracking.IssueTracker
 import mu.KLogging
