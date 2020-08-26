@@ -10,8 +10,8 @@ import com.wire.bots.narvi.tracking.TrackingRequest
 import com.wire.bots.sdk.models.TextMessage
 import mu.KLogging
 import pw.forst.tools.katlib.mapToSet
+import pw.forst.tools.katlib.newLine
 import pw.forst.tools.katlib.whenNull
-import java.time.Instant
 import java.util.UUID
 
 class DummyCommandsProcessor(private val issuesService: IssuesService) : CommandsProcessor {
@@ -50,27 +50,30 @@ class DummyCommandsProcessor(private val issuesService: IssuesService) : Command
     }
 
     // internal because of testing
-    internal fun parseCreateIssueMessage(message: TextMessage): Pair<String, Collection<UUID>> {
-        val text = message.text
-        val withIdx = text.lastIndexOf("with")
+    internal fun parseCreateIssueMessage(message: TextMessage): Triple<String, Collection<UUID>, String> {
+        val (headline, body) = message.text.split(newLine)
+            .let { it.first() to it.drop(1).joinToString(newLine) }
+
+        val withIdx = headline.lastIndexOf("with")
         val users = message.mentions
-            .filter { it.offset > withIdx }
+            .filter { it.offset > withIdx && it.offset < headline.length }
             .mapToSet { it.userId!! }
-        val issueName = text
+        val issueName = headline
             .substring(CREATE_SEQUENCE_START.length - 1, withIdx)
             .trim()
-        return issueName to users
+
+        return Triple(issueName, users, body)
     }
 
     private fun createIssue(message: TextMessage): Collection<TrackingRequest> {
-        val (issueName, mentionedUsers) = parseCreateIssueMessage(message)
+        val (issueName, mentionedUsers, body) = parseCreateIssueMessage(message)
 
         return listOf(
             CreateIssueRequest(
                 // TODO load that one from configuration
                 trackerRepository = "LukasForst/test-repo",
                 title = issueName,
-                body = "Created by the bot at ${Instant.now()}",
+                body = body,
                 mentionedWireUsers = mentionedUsers + message.userId,
                 issueTracker = IssueTracker.GITHUB
             )
@@ -88,7 +91,7 @@ class DummyCommandsProcessor(private val issuesService: IssuesService) : Command
 
         // TODO use names or handles?
         val sayingUser = narviWireClient.getUser(message.userId).name
-        val formattedComment = "User $sayingUser says: \"${message.text}\""
+        val formattedComment = "**$sayingUser** says:\n> ${message.text}"
 
         return listOf(
             AddCommentRequest(
