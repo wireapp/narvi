@@ -11,12 +11,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class IssuesService {
 
-    fun getIssueForConversation(conversationId: ConversationId): Pair<IssueId, IssueTracker>? =
+    fun getIssueForConversation(conversationId: ConversationId): Triple<IssueId, IssueTracker, String>? =
         transaction {
-            Issues.slice(Issues.issueId, Issues.issueTracker)
+            Issues.slice(Issues.issueId, Issues.issueTracker, Issues.trackerRepository)
                 .select { Issues.conversationId eq conversationId.toString() }
                 .firstOrNull()
-                ?.let { it[Issues.issueId] to it[Issues.issueTracker] }
+                ?.let {
+                    Triple(it[Issues.issueId], it[Issues.issueTracker], it[Issues.trackerRepository])
+                }
         }
 
     fun getConversationForIssue(issueId: IssueId): ConversationId? =
@@ -31,13 +33,15 @@ class IssuesService {
     fun insertIssue(
         conversationId: ConversationId,
         issueId: IssueId,
-        issueTracker: IssueTracker
+        issueTracker: IssueTracker,
+        trackerRepository: String
     ) {
         transaction {
             Issues.insert {
                 it[this.issueId] = issueId
                 it[this.conversationId] = conversationId.toString()
                 it[this.issueTracker] = issueTracker
+                it[this.trackerRepository] = trackerRepository
             }
         }
     }

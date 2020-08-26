@@ -13,7 +13,6 @@ class AggregatingIssueTracker(
     override fun addComment(request: AddCommentRequest) =
         tracker(request.issueTracker).addComment(request)
 
-
     override fun closeIssue(request: CloseIssueRequest) =
         tracker(request.issueTracker).closeIssue(request)
 

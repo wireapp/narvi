@@ -1,20 +1,21 @@
 package com.wire.bots.narvi.server
 
-import com.waz.model.Messages
 import com.wire.bots.narvi.dispatch.ActionDispatcher
 import com.wire.bots.narvi.dispatch.AddCommentAction
 import com.wire.bots.narvi.dispatch.CloseIssueAction
+import com.wire.bots.narvi.dispatch.CreateConversationForIssueAction
 import com.wire.bots.narvi.dispatch.CreateIssueAction
 import com.wire.bots.narvi.processor.CommandsProcessor
 import com.wire.bots.narvi.tracking.AddCommentRequest
 import com.wire.bots.narvi.tracking.CloseIssueRequest
+import com.wire.bots.narvi.tracking.CreateConversationForIssueRequest
 import com.wire.bots.narvi.tracking.CreateIssueRequest
 import com.wire.bots.narvi.tracking.TrackingRequest
 import com.wire.bots.sdk.MessageHandlerBase
 import com.wire.bots.sdk.WireClient
 import com.wire.bots.sdk.models.TextMessage
+import com.wire.bots.sdk.user.UserClient
 import mu.KLogging
-import java.util.UUID
 
 class MessageHandler(
     private val actionDispatcher: ActionDispatcher,
@@ -23,22 +24,22 @@ class MessageHandler(
 
     private companion object : KLogging()
 
-    override fun onEvent(client: WireClient, userId: UUID, genericMessage: Messages.GenericMessage) {
-        logger.info { "New event: $genericMessage" }
-    }
-
     override fun onText(client: WireClient, msg: TextMessage) {
+        // it is necessary to run the bot in the user mode
+        val narviClient = NarviWireClient(client as UserClient)
+
         logger.info { "New message: ${msg.text}" }
         val actions = commandsProcessor
-            .createTrackingRequestForText(msg)
-            .map { it.convert(client) }
+            .createTrackingRequestForText(msg, narviClient)
+            .map { it.convert(narviClient) }
         actionDispatcher.dispatch(actions)
     }
 
-    private fun TrackingRequest.convert(client: WireClient) =
+    private fun TrackingRequest.convert(narviClient: NarviWireClient) =
         when (this) {
-            is CreateIssueRequest -> CreateIssueAction(this, client)
-            is AddCommentRequest -> AddCommentAction(this, client)
-            is CloseIssueRequest -> CloseIssueAction(this, client)
+            is CreateIssueRequest -> CreateIssueAction(this, narviClient)
+            is AddCommentRequest -> AddCommentAction(this, narviClient)
+            is CloseIssueRequest -> CloseIssueAction(this, narviClient)
+            is CreateConversationForIssueRequest -> CreateConversationForIssueAction(this, narviClient)
         }
 }

@@ -11,7 +11,7 @@ import org.kohsuke.github.GitHub
 class GithubIssueTracker(private val github: GitHub) : IssueTracker {
 
     override fun createIssue(request: CreateIssueRequest) =
-        github.getRepository(request.repository)
+        github.getRepository(request.trackerRepository)
             .createIssue(request.title)
             .body(request.body)
             .create()
@@ -23,7 +23,7 @@ class GithubIssueTracker(private val github: GitHub) : IssueTracker {
             }
 
     override fun addComment(request: AddCommentRequest) =
-        github.getRepository(request.repository)
+        github.getRepository(request.trackerRepository)
             .getIssue(request.issueId.toInt())
             .comment(request.comment)
             .let {
@@ -34,7 +34,7 @@ class GithubIssueTracker(private val github: GitHub) : IssueTracker {
             }
 
     override fun closeIssue(request: CloseIssueRequest) =
-        github.getRepository(request.repository)
+        github.getRepository(request.trackerRepository)
             .getIssue(request.issueId.toInt())
             .close()
 }

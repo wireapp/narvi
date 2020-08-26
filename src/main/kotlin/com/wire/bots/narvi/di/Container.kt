@@ -1,7 +1,6 @@
 package com.wire.bots.narvi.di
 
 import com.wire.bots.narvi.db.IssuesService
-import com.wire.bots.narvi.db.UsernamesService
 import com.wire.bots.narvi.dispatch.ActionDispatcher
 import com.wire.bots.narvi.dispatch.SynchronousActionDispatcher
 import com.wire.bots.narvi.processor.CommandsProcessor
@@ -22,7 +21,6 @@ val kodein = Kodein {
 
     // database
     bind() from singleton { IssuesService() }
-    bind() from singleton { UsernamesService() }
 
     // server
     bind() from singleton { MessageHandler(instance(), instance()) }
@@ -40,9 +38,9 @@ val kodein = Kodein {
     bind<IssueTracker>() with singleton { instance<AggregatingIssueTracker>() }
 
     // dispatcher
-    bind() from singleton { SynchronousActionDispatcher(instance()) }
+    bind() from singleton { SynchronousActionDispatcher(instance(), instance()) }
     bind<ActionDispatcher>() with singleton { instance<SynchronousActionDispatcher>() }
     // command processor
-    bind() from singleton { DummyCommandsProcessor() }
+    bind() from singleton { DummyCommandsProcessor(instance()) }
     bind<CommandsProcessor>() with singleton { instance<DummyCommandsProcessor>() }
 }

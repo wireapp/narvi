@@ -36,10 +36,11 @@ internal class GithubIssueTrackerTest {
         val result = GithubIssueTracker(github)
             .createIssue(
                 CreateIssueRequest(
-                    personalRepo,
-                    "Title - ${UUID.randomUUID()}",
-                    "Body - some body",
-                    IssueTracker.GITHUB
+                    title = "Title - ${UUID.randomUUID()}",
+                    body = "Body - some body",
+                    mentionedWireUsers = emptyList(),
+                    IssueTracker.GITHUB,
+                    personalRepo
                 )
             )
         logger.info { result }
@@ -51,10 +52,11 @@ internal class GithubIssueTrackerTest {
         val result = GithubIssueTracker(github)
             .createIssue(
                 CreateIssueRequest(
-                    orgRepo,
-                    "Test",
-                    "Test",
-                    IssueTracker.GITHUB
+                    title = "Title - ${UUID.randomUUID()}",
+                    body = "Body - some body",
+                    mentionedWireUsers = emptyList(),
+                    IssueTracker.GITHUB,
+                    orgRepo
                 )
             )
         logger.info { result }
@@ -67,10 +69,10 @@ internal class GithubIssueTrackerTest {
         val result = GithubIssueTracker(github)
             .addComment(
                 AddCommentRequest(
-                    personalRepo,
-                    "1",
-                    "Cool comment sent on ${Instant.now()}",
-                    IssueTracker.GITHUB
+                    trackerRepository = personalRepo,
+                    issueId = "1",
+                    comment = "Cool comment sent on ${Instant.now()}",
+                    issueTracker = IssueTracker.GITHUB
                 )
             )
         logger.info { result }
@@ -82,9 +84,9 @@ internal class GithubIssueTrackerTest {
         GithubIssueTracker(github)
             .closeIssue(
                 CloseIssueRequest(
-                    personalRepo,
-                    "1",
-                    IssueTracker.GITHUB
+                    trackerRepository = personalRepo,
+                    issueId = "1",
+                    issueTracker = IssueTracker.GITHUB
                 )
             )
     }
