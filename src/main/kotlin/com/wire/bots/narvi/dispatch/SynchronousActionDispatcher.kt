@@ -96,8 +96,6 @@ class SynchronousActionDispatcher(
             logger.error(it) { "It was not possible to add comment: ${action.request}" }
         }.onSuccess {
             logger.info { "Comment created under id: ${it.id}" }
-            // todo send or not to send comment links?
-//            dispatch(SendTextAction("Comment added: ${it.link}", action.client))
         }
     }
 }

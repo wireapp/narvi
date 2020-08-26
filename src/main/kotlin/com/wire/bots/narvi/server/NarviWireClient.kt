@@ -27,7 +27,7 @@ class NarviWireClient(
     fun leaveConversation(userId: UUID) =
         wireClient.leaveConversation(userId)
 
-    fun addParticipants(vararg userIds: UUID?): User =
+    fun addParticipants(vararg userIds: UUID): User =
         wireClient.addParticipants(*userIds)
 
     fun addService(serviceId: UUID, providerId: UUID): User =
