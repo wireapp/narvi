@@ -71,7 +71,7 @@ class DummyCommandsProcessor(private val issuesService: IssuesService) : Command
                 trackerRepository = "LukasForst/test-repo",
                 title = issueName,
                 body = "Created by the bot at ${Instant.now()}",
-                mentionedWireUsers = mentionedUsers,
+                mentionedWireUsers = mentionedUsers + message.userId,
                 issueTracker = IssueTracker.GITHUB
             )
         )
