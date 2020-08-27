@@ -66,8 +66,7 @@ class SynchronousActionDispatcher(
             issuesService.insertIssue(
                 conversationId = conversation.id,
                 issueId = action.request.issueId,
-                issueTracker = action.request.issueTracker,
-                trackerRepository = action.request.trackerRepository
+                templateId = action.request.template.id
             )
         }.onFailure {
             logger.error(it) { "It was not possible to create conversation for request: ${action.request}" }

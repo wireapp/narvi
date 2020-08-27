@@ -8,13 +8,13 @@ class AggregatingIssueTracker(
 ) : IssueTracker {
 
     override fun createIssue(request: CreateIssueRequest) =
-        tracker(request.issueTracker).createIssue(request)
+        tracker(request.template.issueTracker).createIssue(request)
 
     override fun addComment(request: AddCommentRequest) =
-        tracker(request.issueTracker).addComment(request)
+        tracker(request.template.issueTracker).addComment(request)
 
     override fun closeIssue(request: CloseIssueRequest) =
-        tracker(request.issueTracker).closeIssue(request)
+        tracker(request.template.issueTracker).closeIssue(request)
 
     private fun tracker(tracker: EnumTracker): IssueTracker =
         when (tracker) {

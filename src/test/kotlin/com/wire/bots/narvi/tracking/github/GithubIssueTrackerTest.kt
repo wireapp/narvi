@@ -1,5 +1,6 @@
 package com.wire.bots.narvi.tracking.github
 
+import com.wire.bots.narvi.db.dto.TemplateDto
 import com.wire.bots.narvi.db.model.IssueTracker
 import com.wire.bots.narvi.tracking.AddCommentRequest
 import com.wire.bots.narvi.tracking.CloseIssueRequest
@@ -39,8 +40,11 @@ internal class GithubIssueTrackerTest {
                     title = "Title - ${UUID.randomUUID()}",
                     body = "Body - some body",
                     mentionedWireUsers = emptyList(),
-                    IssueTracker.GITHUB,
-                    personalRepo
+                    template = TemplateDto(
+                        id = 1,
+                        IssueTracker.GITHUB,
+                        personalRepo
+                    )
                 )
             )
         logger.info { result }
@@ -55,8 +59,11 @@ internal class GithubIssueTrackerTest {
                     title = "Title - ${UUID.randomUUID()}",
                     body = "Body - some body",
                     mentionedWireUsers = emptyList(),
-                    IssueTracker.GITHUB,
-                    orgRepo
+                    template = TemplateDto(
+                        id = 1,
+                        IssueTracker.GITHUB,
+                        orgRepo
+                    )
                 )
             )
         logger.info { result }
@@ -69,10 +76,13 @@ internal class GithubIssueTrackerTest {
         val result = GithubIssueTracker(github)
             .addComment(
                 AddCommentRequest(
-                    trackerRepository = personalRepo,
                     issueId = "1",
                     comment = "Cool comment sent on ${Instant.now()}",
-                    issueTracker = IssueTracker.GITHUB
+                    template = TemplateDto(
+                        id = 1,
+                        IssueTracker.GITHUB,
+                        personalRepo
+                    )
                 )
             )
         logger.info { result }
@@ -84,9 +94,12 @@ internal class GithubIssueTrackerTest {
         GithubIssueTracker(github)
             .closeIssue(
                 CloseIssueRequest(
-                    trackerRepository = personalRepo,
                     issueId = "1",
-                    issueTracker = IssueTracker.GITHUB
+                    template = TemplateDto(
+                        id = 1,
+                        IssueTracker.GITHUB,
+                        personalRepo
+                    )
                 )
             )
     }

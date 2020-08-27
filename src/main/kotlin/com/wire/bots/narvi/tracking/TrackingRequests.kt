@@ -1,28 +1,25 @@
 package com.wire.bots.narvi.tracking
 
-import com.wire.bots.narvi.db.model.IssueTracker
+import com.wire.bots.narvi.db.dto.TemplateDto
 import java.net.URL
 import java.util.UUID
 
 sealed class TrackingRequest {
-    abstract val issueTracker: IssueTracker
-    abstract val trackerRepository: String
+    abstract val template: TemplateDto
 }
 
 data class CreateIssueRequest(
     val title: String,
     val body: String,
     val mentionedWireUsers: Collection<UUID>,
-    override val issueTracker: IssueTracker,
-    override val trackerRepository: String
+    override val template: TemplateDto
 ) : TrackingRequest()
 
 data class CreateConversationForIssueRequest(
     val title: String,
     val issueId: String,
     val wireUsers: Collection<UUID>,
-    override val issueTracker: IssueTracker,
-    override val trackerRepository: String
+    override val template: TemplateDto
 ) : TrackingRequest() {
 
     constructor(
@@ -32,22 +29,19 @@ data class CreateConversationForIssueRequest(
         title = request.title,
         issueId = issueId,
         wireUsers = request.mentionedWireUsers,
-        issueTracker = request.issueTracker,
-        trackerRepository = request.trackerRepository
+        template = request.template
     )
 }
 
 data class AddCommentRequest(
     val issueId: String,
     val comment: String,
-    override val issueTracker: IssueTracker,
-    override val trackerRepository: String
+    override val template: TemplateDto
 ) : TrackingRequest()
 
 data class CloseIssueRequest(
     val issueId: String,
-    override val issueTracker: IssueTracker,
-    override val trackerRepository: String
+    override val template: TemplateDto
 ) : TrackingRequest()
 
 data class CreatedResource(

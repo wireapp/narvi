@@ -1,7 +1,9 @@
 package com.wire.bots.narvi.db
 
-import com.wire.bots.narvi.db.model.IssueTracker
+import com.wire.bots.narvi.db.dto.IssueDto
+import com.wire.bots.narvi.db.dto.TemplateDto
 import com.wire.bots.narvi.db.model.Issues
+import com.wire.bots.narvi.db.model.Templates
 import com.wire.bots.narvi.utils.ConversationId
 import com.wire.bots.narvi.utils.IssueId
 import com.wire.bots.narvi.utils.toUuid
@@ -11,37 +13,35 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class IssuesService {
 
-    fun getIssueForConversation(conversationId: ConversationId): Triple<IssueId, IssueTracker, String>? =
+    fun getIssueForConversation(conversationId: ConversationId) =
         transaction {
-            Issues.slice(Issues.issueId, Issues.issueTracker, Issues.trackerRepository)
+            (Issues innerJoin Templates)
                 .select { Issues.conversationId eq conversationId.toString() }
                 .firstOrNull()
                 ?.let {
-                    Triple(it[Issues.issueId], it[Issues.issueTracker], it[Issues.trackerRepository])
+                    IssueDto(
+                        issueId = it[Issues.issueId],
+                        conversationId = it[Issues.conversationId].toUuid(),
+                        template = TemplateDto(
+                            id = it[Templates.id],
+                            issueTracker = it[Templates.issueTracker],
+                            repository = it[Templates.trackerRepository]
+                        )
+                    )
                 }
-        }
-
-    fun getConversationForIssue(issueId: IssueId): ConversationId? =
-        transaction {
-            Issues.slice(Issues.conversationId)
-                .select { Issues.issueId eq issueId }
-                .firstOrNull()
-                ?.let { it[Issues.conversationId].toUuid() }
         }
 
 
     fun insertIssue(
         conversationId: ConversationId,
         issueId: IssueId,
-        issueTracker: IssueTracker,
-        trackerRepository: String
+        templateId: Int
     ) {
         transaction {
             Issues.insert {
                 it[this.issueId] = issueId
                 it[this.conversationId] = conversationId.toString()
-                it[this.issueTracker] = issueTracker
-                it[this.trackerRepository] = trackerRepository
+                it[this.templateId] = templateId
             }
         }
     }

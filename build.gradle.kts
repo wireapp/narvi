@@ -58,6 +58,7 @@ dependencies {
     testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit5"))
+    testImplementation("io.mockk:mockk:1.10.0")
 
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", junitVersion)
 }
