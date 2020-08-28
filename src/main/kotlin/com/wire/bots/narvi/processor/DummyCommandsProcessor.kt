@@ -37,11 +37,13 @@ class DummyCommandsProcessor(
     private fun createTemplate(message: TextMessage): Collection<TrackingRequest> {
         val (trigger, tracker, repo) = message.text
             .substringAfter(CREATE_TEMPLATE_TRIGGER)
-            .trim()
             .split(" ")
             .map { it.trim() }
             .filter { it.isNotBlank() }
-            .let { Triple(it[0], it[1], it[2]) }
+            .takeIf { it.size == 3 }
+            .whenNull { logger.info { "Could not parse template $message" } }
+            ?.let { Triple(it[0], it[1], it[2]) }
+            ?: return emptyList()
 
         val issueTracker = IssueTracker.valueOf(tracker.toUpperCase())
         return listOf(
@@ -66,6 +68,9 @@ class DummyCommandsProcessor(
 
     private fun createIssue(message: TextMessage): Collection<TrackingRequest> {
         val parsedData = parseCreateMessage(message)
+            .whenNull { logger.info { "Could not parse $message" } }
+            ?: return emptyList()
+
         val template = templatesService
             .templateForTrigger(parsedData.templateName)
             .whenNull { logger.warn { "Unknown template! $message" } }
@@ -90,7 +95,6 @@ class DummyCommandsProcessor(
                 logger.info { "Could not find issue for conversation: ${message.conversationId}, skipping" }
             } ?: return emptyList()
 
-        // TODO use names or handles?
         val sayingUser = narviWireClient.getUser(message.userId).name
         val formattedComment = "**$sayingUser** says:\n> ${message.text}"
 

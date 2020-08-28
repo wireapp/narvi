@@ -8,22 +8,28 @@ import java.util.UUID
 /**
  * Parses issue name
  */
-fun parseCreateMessage(message: TextMessage): ParsedData {
+fun parseCreateMessage(message: TextMessage): ParsedData? {
     // first line is headline, everything else is issue description
     val (headline, body) = message.text.split(newLine)
         .let { it.first().trim() to it.drop(1).joinToString(newLine) }
+
     // first word after create is name of template
     val templateName = headline
         .substringAfter(CREATE_ISSUE_TRIGGER)
         .trim()
         .split(" ")
-        .first()
+        .firstOrNull()
+        ?: return null
 
     // find idx after which everything is users
     val withIdx = headline.lastIndexOf("with")
-    val mentionedUsers = message.mentions
-        .filter { it.offset > withIdx && it.offset < headline.length }
-        .mapToSet { it.userId!! }
+    val mentionedUsers =
+        if (withIdx > 0) {
+            message.mentions
+                .filter { it.offset > withIdx && it.offset < headline.length }
+                .mapToSet { it.userId!! }
+        } else emptySet()
+
     // parse issue name
     val issueName = headline
         .substring(0 until withIdx)
