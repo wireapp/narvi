@@ -7,14 +7,15 @@ import com.wire.bots.narvi.db.model.Templates
 import com.wire.bots.narvi.utils.ConversationId
 import com.wire.bots.narvi.utils.IssueId
 import com.wire.bots.narvi.utils.toUuid
+import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class IssuesService {
+class IssuesService(private val db: Lazy<Database>) {
 
     fun getIssueForConversation(conversationId: ConversationId) =
-        transaction {
+        transaction(db.value) {
             (Issues innerJoin Templates)
                 .select { Issues.conversationId eq conversationId.toString() }
                 .firstOrNull()
@@ -37,7 +38,7 @@ class IssuesService {
         issueId: IssueId,
         templateId: Int
     ) {
-        transaction {
+        transaction(db.value) {
             Issues.insert {
                 it[this.issueId] = issueId
                 it[this.conversationId] = conversationId.toString()

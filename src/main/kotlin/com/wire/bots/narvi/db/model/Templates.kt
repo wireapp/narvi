@@ -2,7 +2,7 @@ package com.wire.bots.narvi.db.model
 
 import org.jetbrains.exposed.sql.Table
 
-object Templates : Table() {
+object Templates : Table("templates") {
     val id = integer("id")
 
     val issueTracker = enumerationByName("issue_tracker", 256, IssueTracker::class)
