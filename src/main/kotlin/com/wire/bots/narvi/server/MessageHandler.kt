@@ -27,14 +27,19 @@ class MessageHandler(
     private companion object : KLogging()
 
     override fun onText(client: WireClient, msg: TextMessage) {
-        // it is necessary to run the bot in the user mode
-        val narviClient = NarviWireClient(client as UserClient)
+        runCatching {
+            require(client is UserClient) { "Bot requires user mode enabled!" }
+            val narviClient = NarviWireClient(client)
 
-        logger.info { "New message: ${msg.text}" }
-        val actions = commandsProcessor
-            .createTrackingRequestForText(msg, narviClient)
-            .map { it.convert(narviClient) }
-        actionDispatcher.dispatch(actions)
+            logger.info { "New message: ${msg.text}" }
+            val actions = commandsProcessor
+                .createTrackingRequestForText(msg, narviClient)
+                .map { it.convert(narviClient) }
+
+            actionDispatcher.dispatch(actions)
+        }.onFailure {
+            logger.error(it) { "Exception during onText handling!" }
+        }
     }
 
     private fun TrackingRequest.convert(narviClient: NarviWireClient) =

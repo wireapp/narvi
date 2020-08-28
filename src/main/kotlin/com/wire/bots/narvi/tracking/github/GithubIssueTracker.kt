@@ -9,7 +9,9 @@ import com.wire.bots.narvi.tracking.TrackingRequest
 import org.kohsuke.github.GitHub
 import com.wire.bots.narvi.db.model.IssueTracker as EnumTracker
 
-
+/**
+ * Implementation of [IssueTracker] for Github
+ */
 class GithubIssueTracker(private val github: GitHub) : IssueTracker {
 
     override fun createIssue(request: CreateIssueRequest) =
@@ -46,10 +48,10 @@ class GithubIssueTracker(private val github: GitHub) : IssueTracker {
                 .close()
         }
 
-    private inline fun <T> guardGithub(
-        request: TrackingRequest, block: (GitHub.() -> (T))
-    ): T {
-        require(request.template.issueTracker == EnumTracker.GITHUB)
+    private inline fun <T> guardGithub(request: TrackingRequest, block: (GitHub.() -> (T))): T {
+        require(request.template.issueTracker == EnumTracker.GITHUB) {
+            "Incompatible tracker request! $request"
+        }
         return block(github)
     }
 }

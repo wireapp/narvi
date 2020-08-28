@@ -3,6 +3,10 @@ package com.wire.bots.narvi.tracking
 import com.wire.bots.narvi.tracking.github.GithubIssueTracker
 import com.wire.bots.narvi.db.model.IssueTracker as EnumTracker
 
+/**
+ * Implementation of issue tracker which can distinguish between different trackers
+ * and send request to the correct one.
+ */
 class AggregatingIssueTracker(
     private val githubIssueTracker: GithubIssueTracker
 ) : IssueTracker {

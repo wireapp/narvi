@@ -6,6 +6,9 @@ import com.wire.bots.narvi.tracking.CreateConversationForIssueRequest
 import com.wire.bots.narvi.tracking.IssueTracker
 import mu.KLogging
 
+/**
+ * Synchronously dispatch actions one by one.
+ */
 class SynchronousActionDispatcher(
     private val issueTracker: IssueTracker,
     private val issuesService: IssuesService,

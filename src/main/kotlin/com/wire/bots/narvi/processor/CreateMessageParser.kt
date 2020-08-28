@@ -6,7 +6,7 @@ import pw.forst.tools.katlib.newLine
 import java.util.UUID
 
 /**
- * Parses issue name
+ * Parses issues metadata.
  */
 fun parseCreateMessage(message: TextMessage): ParsedData? {
     // first line is headline, everything else is issue description

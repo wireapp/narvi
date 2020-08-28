@@ -14,6 +14,9 @@ import com.wire.bots.sdk.models.TextMessage
 import mu.KLogging
 import pw.forst.tools.katlib.whenNull
 
+/**
+ * Simple implementation of [CommandsProcessor]
+ */
 class DummyCommandsProcessor(
     private val issuesService: IssuesService,
     private val templatesService: TemplatesService
@@ -31,6 +34,10 @@ class DummyCommandsProcessor(
             text.startsWith(CLOSE_ISSUE_TRIGGER) -> closeIssue(message)
             text.startsWith(CREATE_TEMPLATE_TRIGGER) -> createTemplate(message)
             else -> commentRequest(message, narviWireClient)
+        }.let {
+            // maybe some resolver failed and thus it is a comment
+            if (it.isNotEmpty()) it
+            else commentRequest(message, narviWireClient)
         }
     }
 

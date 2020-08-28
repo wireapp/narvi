@@ -23,10 +23,3 @@ is CreateIssueAction -> returningLong.unit()
 // in order to be able to call it using dot notation
 @Suppress("unused")
 fun Any?.unit() = Unit
-
-
-fun <T> List<T>.second(): T {
-    if (size > 1)
-        throw NoSuchElementException("List does not contain second element.")
-    return this[1]
-}

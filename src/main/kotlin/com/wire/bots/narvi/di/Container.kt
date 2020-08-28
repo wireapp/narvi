@@ -45,7 +45,6 @@ fun buildDiContainer(config: Configuration, env: Environment) =
                     driver = config.database.driverClass
                 )
             }
-
         }
         bind() from singleton { IssuesService(instance()) }
         bind() from singleton { TemplatesService(instance()) }

@@ -6,6 +6,9 @@ import com.wire.bots.sdk.Server
 import io.dropwizard.setup.Environment
 import org.kodein.di.generic.instance
 
+/**
+ * Dropwizard main service.
+ */
 class NarviService : Server<Configuration>() {
 
     override fun createHandler(config: Configuration, env: Environment): MessageHandler {
