@@ -29,7 +29,7 @@ repositories {
 dependencies {
     implementation("pw.forst.tools", "katlib", "1.1.1")
 
-    implementation("com.wire.bots", "lithium", "2.36.2") {
+    implementation("com.wire.bots", "lithium", "2.36.5") {
         // we're replacing it with newer version as the one included in Lithium has problems with JRE 11
         exclude("com.google.protobuf", "protobuf-java")
     }
