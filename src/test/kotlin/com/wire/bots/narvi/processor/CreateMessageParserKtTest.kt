@@ -4,6 +4,7 @@ import com.wire.bots.sdk.models.TextMessage
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
+import pw.forst.tools.katlib.mapToSet
 import pw.forst.tools.katlib.newLine
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -17,7 +18,7 @@ internal class CreateMessageParserKtTest {
             issueName = "Some Cool Stuff we did",
             issueDescription = "With all that many things$newLine and this and that",
             templateName = "Backendofc",
-            mentionedUsers = (0..5).map { UUID.randomUUID() }
+            mentionedUsers = (0..5).mapToSet { UUID.randomUUID() }
         )
 
         val message = textMessage(
@@ -34,7 +35,7 @@ internal class CreateMessageParserKtTest {
         templateName: String,
         issueName: String,
         description: String,
-        mentions: Collection<UUID>
+        mentions: Set<UUID>
     ): TextMessage {
         val headlineTemplate = "$CREATE_ISSUE_TRIGGER $templateName $issueName with "
         val mentionsOptions =
@@ -48,7 +49,6 @@ internal class CreateMessageParserKtTest {
         val headline = "$headlineTemplate$mentionsInString"
 
         val indexedMentions = headline
-            .substringAfterLast("with ")
             .mapIndexedNotNull { index, c -> if (c == '@') index else null }
             .zip(mentions)
 

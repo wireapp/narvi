@@ -11,14 +11,14 @@ sealed class TrackingRequest {
 data class CreateIssueRequest(
     val title: String,
     val body: String,
-    val mentionedWireUsers: Collection<UUID>,
+    val mentionedWireUsers: Set<UUID>,
     override val template: TemplateDto
 ) : TrackingRequest()
 
 data class CreateConversationForIssueRequest(
     val title: String,
     val issueId: String,
-    val wireUsers: Collection<UUID>,
+    val wireUsers: Set<UUID>,
     override val template: TemplateDto
 ) : TrackingRequest() {
 

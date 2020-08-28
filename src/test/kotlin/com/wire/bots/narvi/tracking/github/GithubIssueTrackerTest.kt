@@ -39,7 +39,7 @@ internal class GithubIssueTrackerTest {
                 CreateIssueRequest(
                     title = "Title - ${UUID.randomUUID()}",
                     body = "Body - some body",
-                    mentionedWireUsers = emptyList(),
+                    mentionedWireUsers = emptySet(),
                     template = TemplateDto(
                         id = 1,
                         IssueTracker.GITHUB,
@@ -58,7 +58,7 @@ internal class GithubIssueTrackerTest {
                 CreateIssueRequest(
                     title = "Title - ${UUID.randomUUID()}",
                     body = "Body - some body",
-                    mentionedWireUsers = emptyList(),
+                    mentionedWireUsers = emptySet(),
                     template = TemplateDto(
                         id = 1,
                         IssueTracker.GITHUB,

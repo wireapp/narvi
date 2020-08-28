@@ -27,7 +27,7 @@ fun parseCreateMessage(message: TextMessage): ParsedData {
         .mapToSet { it.userId!! }
     // parse issue name
     val issueName = headline
-        .substring(0..withIdx)
+        .substring(0 until withIdx)
         .substringAfter("$CREATE_ISSUE_TRIGGER $templateName")
         .trim()
 
@@ -43,5 +43,5 @@ data class ParsedData(
     val issueName: String,
     val issueDescription: String,
     val templateName: String,
-    val mentionedUsers: Collection<UUID>
+    val mentionedUsers: Set<UUID>
 )
