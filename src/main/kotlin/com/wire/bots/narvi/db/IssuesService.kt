@@ -12,10 +12,10 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class IssuesService(private val db: Lazy<Database>) {
+class IssuesService(private val db: Database) {
 
     fun getIssueForConversation(conversationId: ConversationId) =
-        transaction(db.value) {
+        transaction(db) {
             (Issues innerJoin Templates)
                 .select { Issues.conversationId eq conversationId.toString() }
                 .firstOrNull()
@@ -39,7 +39,7 @@ class IssuesService(private val db: Lazy<Database>) {
         issueId: IssueId,
         templateId: Int
     ) {
-        transaction(db.value) {
+        transaction(db) {
             Issues.insert {
                 it[this.issueId] = issueId
                 it[this.conversationId] = conversationId.toString()

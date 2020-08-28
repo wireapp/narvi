@@ -8,10 +8,10 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class TemplatesService(private val db: Lazy<Database>) {
+class TemplatesService(private val db: Database) {
 
     fun templateForTrigger(trigger: String) =
-        transaction(db.value) {
+        transaction(db) {
             Templates
                 .select { Templates.trigger eq trigger }
                 .singleOrNull()
@@ -30,7 +30,7 @@ class TemplatesService(private val db: Lazy<Database>) {
         repository: String,
         trigger: String
     ): Unit =
-        transaction(db.value) {
+        transaction(db) {
             Templates.insert {
                 it[this.issueTracker] = issueTracker
                 it[this.trackerRepository] = repository

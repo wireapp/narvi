@@ -37,15 +37,13 @@ fun buildDiContainer(config: Configuration, env: Environment) =
 
         // database
         bind() from singleton {
-            lazy {
-                instance<Configuration>().let { config ->
-                    Database.connect(
-                        url = config.database.url,
-                        user = requireNotNull(config.database.user) { "Database user was null!" },
-                        password = requireNotNull(config.database.password) { "Database password was null!" },
-                        driver = config.database.driverClass
-                    )
-                }
+            instance<Configuration>().let { config ->
+                Database.connect(
+                    url = config.database.url,
+                    user = requireNotNull(config.database.user) { "Database user was null!" },
+                    password = requireNotNull(config.database.password) { "Database password was null!" },
+                    driver = config.database.driverClass
+                )
             }
 
         }
