@@ -19,7 +19,8 @@ class TemplatesService(private val db: Lazy<Database>) {
                     TemplateDto(
                         id = it[Templates.id],
                         issueTracker = it[Templates.issueTracker],
-                        repository = it[Templates.trackerRepository]
+                        repository = it[Templates.trackerRepository],
+                        trigger = it[Templates.trigger]
                     )
                 }
         }
@@ -28,7 +29,7 @@ class TemplatesService(private val db: Lazy<Database>) {
         issueTracker: IssueTracker,
         repository: String,
         trigger: String
-    ) =
+    ): Unit =
         transaction(db.value) {
             Templates.insert {
                 it[this.issueTracker] = issueTracker

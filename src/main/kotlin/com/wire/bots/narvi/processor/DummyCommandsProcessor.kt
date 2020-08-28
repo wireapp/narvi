@@ -2,10 +2,13 @@ package com.wire.bots.narvi.processor
 
 import com.wire.bots.narvi.db.IssuesService
 import com.wire.bots.narvi.db.TemplatesService
+import com.wire.bots.narvi.db.dto.TemplateDto
+import com.wire.bots.narvi.db.model.IssueTracker
 import com.wire.bots.narvi.server.NarviWireClient
 import com.wire.bots.narvi.tracking.AddCommentRequest
 import com.wire.bots.narvi.tracking.CloseIssueRequest
 import com.wire.bots.narvi.tracking.CreateIssueRequest
+import com.wire.bots.narvi.tracking.CreateTemplateRequest
 import com.wire.bots.narvi.tracking.TrackingRequest
 import com.wire.bots.sdk.models.TextMessage
 import mu.KLogging
@@ -26,8 +29,24 @@ class DummyCommandsProcessor(
         return when {
             text.startsWith(CREATE_ISSUE_TRIGGER) -> createIssue(message)
             text.startsWith(CLOSE_ISSUE_TRIGGER) -> closeIssue(message)
+            text.startsWith(CREATE_TEMPLATE_TRIGGER) -> createTemplate(message)
             else -> commentRequest(message, narviWireClient)
         }
+    }
+
+    private fun createTemplate(message: TextMessage): Collection<TrackingRequest> {
+        val (trigger, tracker, repo) = message.text
+            .substringAfter(CREATE_TEMPLATE_TRIGGER)
+            .trim()
+            .split(" ")
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .let { Triple(it[0], it[1], it[2]) }
+
+        val issueTracker = IssueTracker.valueOf(tracker.toUpperCase())
+        return listOf(
+            CreateTemplateRequest(TemplateDto(-1, issueTracker, repo, trigger))
+        )
     }
 
     private fun closeIssue(message: TextMessage): Collection<TrackingRequest> {

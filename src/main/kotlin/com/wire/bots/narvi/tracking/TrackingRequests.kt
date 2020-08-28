@@ -8,6 +8,10 @@ sealed class TrackingRequest {
     abstract val template: TemplateDto
 }
 
+data class CreateTemplateRequest(
+    override val template: TemplateDto
+) : TrackingRequest()
+
 data class CreateIssueRequest(
     val title: String,
     val body: String,

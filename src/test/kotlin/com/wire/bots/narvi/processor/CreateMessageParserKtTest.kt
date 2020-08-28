@@ -3,6 +3,7 @@ package com.wire.bots.narvi.processor
 import com.wire.bots.sdk.models.TextMessage
 import io.mockk.every
 import io.mockk.mockk
+import mu.KLogging
 import org.junit.jupiter.api.Test
 import pw.forst.tools.katlib.mapToSet
 import pw.forst.tools.katlib.newLine
@@ -11,6 +12,7 @@ import kotlin.test.assertEquals
 
 internal class CreateMessageParserKtTest {
 
+    private companion object : KLogging()
 
     @Test
     fun `test parseCreateMessage`() {
@@ -37,7 +39,7 @@ internal class CreateMessageParserKtTest {
         description: String,
         mentions: Set<UUID>
     ): TextMessage {
-        val headlineTemplate = "$CREATE_ISSUE_TRIGGER $templateName $issueName with "
+        val headlineTemplate = "$CREATE_ISSUE_TRIGGER$templateName $issueName with "
         val mentionsOptions =
             listOf("@John", "@Jala", "@Trala", "@Boy", "@Johny", "@Stuff")
 
@@ -67,7 +69,7 @@ internal class CreateMessageParserKtTest {
                     userId = mUserId
                 }
             }
-
+        logger.info { "Final test: $messageText" }
         return mockk {
             every { text } returns messageText
             every { mentions } returns mockMentions

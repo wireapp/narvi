@@ -43,7 +43,8 @@ internal class GithubIssueTrackerTest {
                     template = TemplateDto(
                         id = 1,
                         IssueTracker.GITHUB,
-                        personalRepo
+                        personalRepo,
+                        ""
                     )
                 )
             )
@@ -62,7 +63,8 @@ internal class GithubIssueTrackerTest {
                     template = TemplateDto(
                         id = 1,
                         IssueTracker.GITHUB,
-                        orgRepo
+                        orgRepo,
+                        ""
                     )
                 )
             )
@@ -81,7 +83,8 @@ internal class GithubIssueTrackerTest {
                     template = TemplateDto(
                         id = 1,
                         IssueTracker.GITHUB,
-                        personalRepo
+                        personalRepo,
+                        ""
                     )
                 )
             )
@@ -98,7 +101,8 @@ internal class GithubIssueTrackerTest {
                     template = TemplateDto(
                         id = 1,
                         IssueTracker.GITHUB,
-                        personalRepo
+                        personalRepo,
+                        ""
                     )
                 )
             )

@@ -26,7 +26,8 @@ class IssuesService(private val db: Lazy<Database>) {
                         template = TemplateDto(
                             id = it[Templates.id],
                             issueTracker = it[Templates.issueTracker],
-                            repository = it[Templates.trackerRepository]
+                            repository = it[Templates.trackerRepository],
+                            trigger = it[Templates.trigger]
                         )
                     )
                 }

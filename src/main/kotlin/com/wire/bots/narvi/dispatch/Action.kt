@@ -5,6 +5,7 @@ import com.wire.bots.narvi.tracking.AddCommentRequest
 import com.wire.bots.narvi.tracking.CloseIssueRequest
 import com.wire.bots.narvi.tracking.CreateConversationForIssueRequest
 import com.wire.bots.narvi.tracking.CreateIssueRequest
+import com.wire.bots.narvi.tracking.CreateTemplateRequest
 
 sealed class Action {
     abstract val client: NarviWireClient
@@ -30,8 +31,12 @@ data class AddCommentAction(
     override val client: NarviWireClient
 ) : Action()
 
-
 data class CreateConversationForIssueAction(
     val request: CreateConversationForIssueRequest,
+    override val client: NarviWireClient
+) : Action()
+
+data class CreateTemplateAction(
+    val request: CreateTemplateRequest,
     override val client: NarviWireClient
 ) : Action()

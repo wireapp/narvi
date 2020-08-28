@@ -1,13 +1,15 @@
 package com.wire.bots.narvi.dispatch
 
 import com.wire.bots.narvi.db.IssuesService
+import com.wire.bots.narvi.db.TemplatesService
 import com.wire.bots.narvi.tracking.CreateConversationForIssueRequest
 import com.wire.bots.narvi.tracking.IssueTracker
 import mu.KLogging
 
 class SynchronousActionDispatcher(
     private val issueTracker: IssueTracker,
-    private val issuesService: IssuesService
+    private val issuesService: IssuesService,
+    private val templateService: TemplatesService
 ) : ActionDispatcher {
 
     private companion object : KLogging()
@@ -22,7 +24,25 @@ class SynchronousActionDispatcher(
             is CloseIssueAction -> dispatch(action)
             is AddCommentAction -> dispatch(action)
             is CreateConversationForIssueAction -> dispatch(action)
+            is CreateTemplateAction -> dispatch(action)
         }
+
+    private fun dispatch(action: CreateTemplateAction) {
+        logger.info { "Creating new template" }
+        val template = action.request.template
+        runCatching {
+            templateService.insertTemplate(
+                issueTracker = template.issueTracker,
+                repository = template.repository,
+                trigger = template.trigger
+            )
+        }.onFailure {
+            logger.error(it) { "It was not possible to create template ${template.trigger}" }
+        }.onSuccess {
+            logger.info { "Template \"${template.trigger}\" created" }
+            dispatch(SendTextAction("Template \"${template.trigger}\" created", action.client))
+        }
+    }
 
     private fun dispatch(action: SendTextAction) {
         logger.info { "Sending message." }

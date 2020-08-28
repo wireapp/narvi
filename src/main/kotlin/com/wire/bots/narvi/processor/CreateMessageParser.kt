@@ -5,7 +5,6 @@ import pw.forst.tools.katlib.mapToSet
 import pw.forst.tools.katlib.newLine
 import java.util.UUID
 
-// TODO test this function
 /**
  * Parses issue name
  */
@@ -28,7 +27,7 @@ fun parseCreateMessage(message: TextMessage): ParsedData {
     // parse issue name
     val issueName = headline
         .substring(0 until withIdx)
-        .substringAfter("$CREATE_ISSUE_TRIGGER $templateName")
+        .substringAfter("$CREATE_ISSUE_TRIGGER$templateName")
         .trim()
 
     return ParsedData(
