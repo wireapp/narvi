@@ -43,24 +43,6 @@ class DummyCommandsProcessor(
         }
     }
 
-    private fun sendHelpText(): Collection<TrackingRequest> {
-        return listOf(
-            TextSendRequest(
-                """
-                    Possible commands:
-                    $CREATE_ISSUE_TRIGGER - creates new issue
-                    $CREATE_TEMPLATE_TRIGGER - creates new template for the issues
-                    $CLOSE_ISSUE_TRIGGER - closes issue associated with the conversation
-                    $HELP_TRIGGER - displays this help
-                    
-                    Commands parameters syntax:
-                    $CREATE_ISSUE_TRIGGER <template> <issue name> with <mentions> <new line> <description>
-                    $CREATE_TEMPLATE_TRIGGER <template name> <tracker> <repository>
-                """.trimIndent()
-            )
-        )
-    }
-
     private fun createTemplate(message: TextMessage): Collection<TrackingRequest> {
         val (trigger, tracker, repo) = message.text
             .substringAfter(CREATE_TEMPLATE_TRIGGER)
@@ -130,6 +112,34 @@ class DummyCommandsProcessor(
                 issueId = issue.issueId,
                 comment = formattedComment,
                 template = issue.template
+            )
+        )
+    }
+
+    private fun sendHelpText(): Collection<TrackingRequest> {
+        return listOf(
+            TextSendRequest(
+                """
+                    Possible commands:
+                    **${CREATE_TEMPLATE_TRIGGER.trim()}** - creates a new template for the issues
+                    **${CREATE_ISSUE_TRIGGER.trim()}** - creates a new issue
+                    **$CLOSE_ISSUE_TRIGGER** - closes issue associated with the conversation
+                    **$HELP_TRIGGER** - displays this help
+                    
+                    Commands parameters syntax:
+                    **${CREATE_TEMPLATE_TRIGGER.trim()}** <template name> <tracker> <repository>
+                    **${CREATE_ISSUE_TRIGGER.trim()}** <template> <issue name> with <mentions> <new line> <description>
+
+                    Example of **${CREATE_TEMPLATE_TRIGGER.trim()}**:
+                    ```
+                    ${CREATE_TEMPLATE_TRIGGER.trim()} backend github wireapp/test-repo
+                    ```
+                    Example of **${CREATE_ISSUE_TRIGGER.trim()}**:
+                    ```
+                    ${CREATE_ISSUE_TRIGGER.trim()} backend My Awesome Name with @JamesBond @MontyBern
+                    Some Description of a very hard problem, we're solving.
+                    ```
+                """.trimIndent()
             )
         )
     }
