@@ -35,3 +35,16 @@ Example of **@create**
 @create backend My Awesome Name with @JamesBond @MontyBern
 Some Description of a very hard problem, we're solving.
 ```
+
+## Required Env
+```
+WIRE_API_HOST
+WIRE_WS_HOST
+DB_DRIVER (default postgres)
+DB_URL
+DB_USER
+DB_PASSWORD
+EMAIL
+PASSWORD
+GITHUB_TOKEN
+```
