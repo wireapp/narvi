@@ -6,12 +6,14 @@ import com.wire.bots.narvi.dispatch.CloseIssueAction
 import com.wire.bots.narvi.dispatch.CreateConversationForIssueAction
 import com.wire.bots.narvi.dispatch.CreateIssueAction
 import com.wire.bots.narvi.dispatch.CreateTemplateAction
+import com.wire.bots.narvi.dispatch.SendTextAction
 import com.wire.bots.narvi.processor.CommandsProcessor
 import com.wire.bots.narvi.tracking.AddCommentRequest
 import com.wire.bots.narvi.tracking.CloseIssueRequest
 import com.wire.bots.narvi.tracking.CreateConversationForIssueRequest
 import com.wire.bots.narvi.tracking.CreateIssueRequest
 import com.wire.bots.narvi.tracking.CreateTemplateRequest
+import com.wire.bots.narvi.tracking.TextSendRequest
 import com.wire.bots.narvi.tracking.TrackingRequest
 import com.wire.bots.sdk.MessageHandlerBase
 import com.wire.bots.sdk.WireClient
@@ -49,5 +51,6 @@ class MessageHandler(
             is CloseIssueRequest -> CloseIssueAction(this, narviClient)
             is CreateConversationForIssueRequest -> CreateConversationForIssueAction(this, narviClient)
             is CreateTemplateRequest -> CreateTemplateAction(this, narviClient)
+            is TextSendRequest -> SendTextAction(message, narviClient)
         }
 }

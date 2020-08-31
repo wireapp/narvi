@@ -9,6 +9,7 @@ import com.wire.bots.narvi.tracking.AddCommentRequest
 import com.wire.bots.narvi.tracking.CloseIssueRequest
 import com.wire.bots.narvi.tracking.CreateIssueRequest
 import com.wire.bots.narvi.tracking.CreateTemplateRequest
+import com.wire.bots.narvi.tracking.TextSendRequest
 import com.wire.bots.narvi.tracking.TrackingRequest
 import com.wire.bots.sdk.models.TextMessage
 import mu.KLogging
@@ -33,12 +34,31 @@ class DummyCommandsProcessor(
             text.startsWith(CREATE_ISSUE_TRIGGER) -> createIssue(message)
             text.startsWith(CLOSE_ISSUE_TRIGGER) -> closeIssue(message)
             text.startsWith(CREATE_TEMPLATE_TRIGGER) -> createTemplate(message)
+            text.startsWith(HELP_TRIGGER) -> sendHelpText()
             else -> commentRequest(message, narviWireClient)
         }.let {
             // maybe some resolver failed and thus it is a comment
             if (it.isNotEmpty()) it
             else commentRequest(message, narviWireClient)
         }
+    }
+
+    private fun sendHelpText(): Collection<TrackingRequest> {
+        return listOf(
+            TextSendRequest(
+                """
+                    Possible commands:
+                    $CREATE_ISSUE_TRIGGER - creates new issue
+                    $CREATE_TEMPLATE_TRIGGER - creates new template for the issues
+                    $CLOSE_ISSUE_TRIGGER - closes issue associated with the conversation
+                    $HELP_TRIGGER - displays this help
+                    
+                    Commands parameters syntax:
+                    $CREATE_ISSUE_TRIGGER <template> <issue name> with <mentions> <new line> <description>
+                    $CREATE_TEMPLATE_TRIGGER <template name> <tracker> <repository>
+                """.trimIndent()
+            )
+        )
     }
 
     private fun createTemplate(message: TextMessage): Collection<TrackingRequest> {

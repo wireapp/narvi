@@ -4,27 +4,33 @@ import com.wire.bots.narvi.db.dto.TemplateDto
 import java.net.URL
 import java.util.UUID
 
-sealed class TrackingRequest {
-    abstract val template: TemplateDto
+interface TemplateTrackingRequests {
+    val template: TemplateDto
 }
+
+sealed class TrackingRequest
+
+data class TextSendRequest(
+    val message: String
+) : TrackingRequest()
 
 data class CreateTemplateRequest(
     override val template: TemplateDto
-) : TrackingRequest()
+) : TemplateTrackingRequests, TrackingRequest()
 
 data class CreateIssueRequest(
     val title: String,
     val body: String,
     val mentionedWireUsers: Set<UUID>,
     override val template: TemplateDto
-) : TrackingRequest()
+) : TemplateTrackingRequests, TrackingRequest()
 
 data class CreateConversationForIssueRequest(
     val title: String,
     val issueId: String,
     val wireUsers: Set<UUID>,
     override val template: TemplateDto
-) : TrackingRequest() {
+) : TemplateTrackingRequests, TrackingRequest() {
 
     constructor(
         request: CreateIssueRequest,
@@ -41,12 +47,12 @@ data class AddCommentRequest(
     val issueId: String,
     val comment: String,
     override val template: TemplateDto
-) : TrackingRequest()
+) : TemplateTrackingRequests, TrackingRequest()
 
 data class CloseIssueRequest(
     val issueId: String,
     override val template: TemplateDto
-) : TrackingRequest()
+) : TemplateTrackingRequests, TrackingRequest()
 
 data class CreatedResource(
     val id: String,

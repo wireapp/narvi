@@ -5,7 +5,7 @@ import com.wire.bots.narvi.tracking.CloseIssueRequest
 import com.wire.bots.narvi.tracking.CreateIssueRequest
 import com.wire.bots.narvi.tracking.CreatedResource
 import com.wire.bots.narvi.tracking.IssueTracker
-import com.wire.bots.narvi.tracking.TrackingRequest
+import com.wire.bots.narvi.tracking.TemplateTrackingRequests
 import org.kohsuke.github.GitHub
 import com.wire.bots.narvi.db.model.IssueTracker as EnumTracker
 
@@ -48,7 +48,7 @@ class GithubIssueTracker(private val github: GitHub) : IssueTracker {
                 .close()
         }
 
-    private inline fun <T> guardGithub(request: TrackingRequest, block: (GitHub.() -> (T))): T {
+    private inline fun <T> guardGithub(request: TemplateTrackingRequests, block: (GitHub.() -> (T))): T {
         require(request.template.issueTracker == EnumTracker.GITHUB) {
             "Incompatible tracker request! $request"
         }
