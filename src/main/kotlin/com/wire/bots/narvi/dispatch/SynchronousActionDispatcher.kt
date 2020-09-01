@@ -2,6 +2,7 @@ package com.wire.bots.narvi.dispatch
 
 import com.wire.bots.narvi.db.IssuesService
 import com.wire.bots.narvi.db.TemplatesService
+import com.wire.bots.narvi.server.NarviClientRepo
 import com.wire.bots.narvi.tracking.CreateConversationForIssueRequest
 import com.wire.bots.narvi.tracking.IssueTracker
 import mu.KLogging
@@ -12,7 +13,8 @@ import mu.KLogging
 class SynchronousActionDispatcher(
     private val issueTracker: IssueTracker,
     private val issuesService: IssuesService,
-    private val templateService: TemplatesService
+    private val templateService: TemplatesService,
+    private val clientRepo: NarviClientRepo
 ) : ActionDispatcher {
 
     private companion object : KLogging()
@@ -69,7 +71,7 @@ class SynchronousActionDispatcher(
             dispatch(
                 listOf(
                     CreateConversationForIssueAction(
-                        CreateConversationForIssueRequest(action.request, it.id),
+                        CreateConversationForIssueRequest(action.request, it.id, it.link),
                         action.client
                     ),
                     SendTextAction("Issue created - ${it.link}", action.client)
@@ -91,9 +93,19 @@ class SynchronousActionDispatcher(
                 issueId = action.request.issueId,
                 templateId = action.request.template.id
             )
+            conversation
         }.onFailure {
             logger.error(it) { "It was not possible to create conversation for request: ${action.request}" }
         }.onSuccess {
+            dispatch(
+                SendTextAction(
+                    """
+                        Conversation for issue [#${action.request.issueId} ${action.request.title}](${action.request.issueLink})
+                        *Please note that all messages sent to this conversation will be recorded in the issue tracking system.*
+                    """.trimIndent(),
+                    clientRepo.getClient(it.id)
+                )
+            )
             logger.info { "Conversation created for issue id ${action.request.issueId}" }
         }
     }
@@ -105,7 +117,7 @@ class SynchronousActionDispatcher(
         }.onFailure {
             logger.error(it) { "It was not possible to close issue: ${action.request}" }
         }.onSuccess {
-            logger.info { "Issue ${action.request.issueId} closed." }
+            logger.info { "Issue #${action.request.issueId} closed." }
             dispatch(SendTextAction("Issue ${action.request.issueId} closed.", action.client))
         }
     }

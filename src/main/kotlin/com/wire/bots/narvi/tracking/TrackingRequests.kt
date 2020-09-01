@@ -29,17 +29,20 @@ data class CreateConversationForIssueRequest(
     val title: String,
     val issueId: String,
     val wireUsers: Set<UUID>,
+    val issueLink: URL,
     override val template: TemplateDto
 ) : TemplateTrackingRequests, TrackingRequest() {
 
     constructor(
         request: CreateIssueRequest,
-        issueId: String
+        issueId: String,
+        issueLink: URL,
     ) : this(
         title = request.title,
         issueId = issueId,
         wireUsers = request.mentionedWireUsers,
-        template = request.template
+        template = request.template,
+        issueLink = issueLink
     )
 }
 

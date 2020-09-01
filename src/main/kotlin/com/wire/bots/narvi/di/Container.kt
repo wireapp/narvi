@@ -11,7 +11,6 @@ import com.wire.bots.narvi.tracking.AggregatingIssueTracker
 import com.wire.bots.narvi.tracking.IssueTracker
 import com.wire.bots.narvi.tracking.github.GithubIssueTracker
 import com.wire.bots.sdk.Configuration
-import io.dropwizard.setup.Environment
 import org.jetbrains.exposed.sql.Database
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
@@ -24,15 +23,14 @@ import pw.forst.tools.katlib.propertiesFromResources
 import java.util.Properties
 
 const val GITHUB_TOKEN = "github-token"
-
-
-fun buildDiContainer(config: Configuration, env: Environment) =
+const val USER_ID = "user-id"
+fun buildDiContainer(additionalRegistration: Kodein.MainBuilder.() -> Unit) =
     Kodein {
+        additionalRegistration()
+
         val props by lazy { propertiesFromResources("/secret.properties") ?: Properties() }
 
-        // bind configuration
-        bind() from singleton { env }
-        bind() from singleton { config }
+        // bind config
         constant(GITHUB_TOKEN) with (getEnv("GITHUB_TOKEN") ?: props.getProperty("github.token"))
 
         // database
@@ -64,7 +62,7 @@ fun buildDiContainer(config: Configuration, env: Environment) =
         bind<IssueTracker>() with singleton { instance<AggregatingIssueTracker>() }
 
         // dispatcher
-        bind() from singleton { SynchronousActionDispatcher(instance(), instance(), instance()) }
+        bind() from singleton { SynchronousActionDispatcher(instance(), instance(), instance(), instance()) }
         bind<ActionDispatcher>() with singleton { instance<SynchronousActionDispatcher>() }
         // command processor
         bind() from singleton { DummyCommandsProcessor(instance(), instance()) }
