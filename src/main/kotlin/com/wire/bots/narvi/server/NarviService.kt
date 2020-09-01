@@ -18,10 +18,9 @@ import java.util.UUID
  */
 class NarviService : Server<Configuration>() {
     // initialized in createRepo, can be used in createHandler
-    private lateinit var userId: UUID
+    private lateinit var kodein: Kodein
 
     override fun createHandler(config: Configuration, env: Environment): MessageHandler {
-        val kodein = buildDiContainer(config, env)
         val handler by kodein.instance<MessageHandler>()
         return handler
     }
@@ -29,23 +28,23 @@ class NarviService : Server<Configuration>() {
     override fun createClientRepo(): NarviClientRepo {
         val access = LoginClient(client)
             .login(config.userMode.email, config.userMode.password)
-        userId = access.userId
 
         return NarviClientRepo(
             client,
             cryptoFactory,
             storageFactory,
-            userId
-        )
+            access.userId
+        ).also {
+            // this is ugly, but we finally have everything to build DI container
+            kodein = buildDiContainer(access.userId, it)
+        }
     }
 
-    private fun buildDiContainer(config: Configuration, env: Environment): Kodein {
-        // verify that super.repo is product of createClientRepo
-        val repo = super.repo as NarviClientRepo
+    private fun buildDiContainer(userId: UUID, repo: NarviClientRepo): Kodein {
         // register this stuff in the Kodein
         return buildDiContainer {
             // bind parameter stuff
-            bind() from singleton { env }
+            bind() from singleton { environment }
             bind() from singleton { config }
             bind() from singleton { client }
             bind() from singleton { cryptoFactory }
