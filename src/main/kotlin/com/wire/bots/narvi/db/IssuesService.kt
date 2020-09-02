@@ -33,6 +33,16 @@ class IssuesService(private val db: Database) {
                 }
         }
 
+    fun getConversationIdForIssue(issueId: IssueId) =
+        transaction(db) {
+            (Issues innerJoin Templates)
+                .select { Issues.issueId eq issueId }
+                .firstOrNull()
+                ?.let {
+                    it[Issues.conversationId].toUuid()
+                }
+        }
+
 
     fun insertIssue(
         conversationId: ConversationId,

@@ -2,6 +2,7 @@ package com.wire.bots.narvi.server
 
 import com.wire.bots.narvi.di.USER_ID
 import com.wire.bots.narvi.di.buildDiContainer
+import com.wire.bots.narvi.server.resources.GitHubResource
 import com.wire.bots.sdk.Configuration
 import com.wire.bots.sdk.Server
 import com.wire.bots.sdk.user.LoginClient
@@ -23,6 +24,13 @@ class NarviService : Server<Configuration>() {
     override fun createHandler(config: Configuration, env: Environment): MessageHandler {
         val handler by kodein.instance<MessageHandler>()
         return handler
+    }
+
+    override fun initialize(config: Configuration, env: Environment) {
+        super.initialize(config, env)
+        // called after createClientRepo, kodein is initialized
+        val githubResource by kodein.instance<GitHubResource>()
+        addResource(githubResource)
     }
 
     override fun createClientRepo(): NarviClientRepo {

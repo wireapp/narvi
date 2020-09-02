@@ -44,6 +44,12 @@ dependencies {
     // DI container
     implementation("org.kodein.di", "kodein-di-generic-jvm", "6.5.5")
 
+    // jackson parsing
+    val jacksonVersion = "2.10.4"
+    implementation("com.fasterxml.jackson.core", "jackson-annotations", jacksonVersion)
+    implementation("com.fasterxml.jackson.core", "jackson-databind", jacksonVersion)
+    implementation("com.fasterxml.jackson.module", "jackson-module-kotlin", jacksonVersion)
+
     // database
     val exposedVersion = "0.26.2"
     implementation("org.jetbrains.exposed", "exposed-core", exposedVersion)

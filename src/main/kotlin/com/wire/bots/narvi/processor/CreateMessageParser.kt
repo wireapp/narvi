@@ -30,9 +30,11 @@ fun parseCreateMessage(message: TextMessage): ParsedData? {
                 .mapToSet { it.userId!! }
         } else emptySet()
 
+    val nameEndIndex = if (withIdx > 0) withIdx else headline.length
+
     // parse issue name
     val issueName = headline
-        .substring(0 until withIdx)
+        .substring(0 until nameEndIndex)
         .substringAfter("$CREATE_ISSUE_TRIGGER$templateName")
         .trim()
 

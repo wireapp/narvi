@@ -7,9 +7,12 @@ import com.wire.bots.narvi.dispatch.SynchronousActionDispatcher
 import com.wire.bots.narvi.processor.CommandsProcessor
 import com.wire.bots.narvi.processor.DummyCommandsProcessor
 import com.wire.bots.narvi.server.MessageHandler
+import com.wire.bots.narvi.server.resources.GitHubResource
 import com.wire.bots.narvi.tracking.AggregatingIssueTracker
 import com.wire.bots.narvi.tracking.IssueTracker
 import com.wire.bots.narvi.tracking.github.GithubIssueTracker
+import com.wire.bots.narvi.tracking.github.GithubWebhookHandler
+import com.wire.bots.narvi.tracking.github.GithubWebhookValidator
 import com.wire.bots.sdk.Configuration
 import org.jetbrains.exposed.sql.Database
 import org.kodein.di.Kodein
@@ -24,6 +27,8 @@ import java.util.Properties
 
 const val GITHUB_TOKEN = "github-token"
 const val USER_ID = "user-id"
+const val GITHUB_SIGNING_SECRET = "github-signing-secret"
+
 fun buildDiContainer(additionalRegistration: Kodein.MainBuilder.() -> Unit) =
     Kodein {
         additionalRegistration()
@@ -32,6 +37,7 @@ fun buildDiContainer(additionalRegistration: Kodein.MainBuilder.() -> Unit) =
 
         // bind config
         constant(GITHUB_TOKEN) with (getEnv("GITHUB_TOKEN") ?: props.getProperty("github.token"))
+        constant(GITHUB_SIGNING_SECRET) with (getEnv("GITHUB_SIGN") ?: props.getProperty("github.sign"))
 
         // database
         bind() from singleton {
@@ -57,6 +63,9 @@ fun buildDiContainer(additionalRegistration: Kodein.MainBuilder.() -> Unit) =
                 .build()
         }
         bind() from singleton { GithubIssueTracker(instance()) }
+        bind() from singleton { GithubWebhookHandler(instance(), instance(), instance(), instance()) }
+        bind() from singleton { GithubWebhookValidator(instance(GITHUB_SIGNING_SECRET)) }
+        bind() from singleton { GitHubResource(instance(), instance()) }
         bind() from singleton { AggregatingIssueTracker(instance()) }
         // select default tracking system
         bind<IssueTracker>() with singleton { instance<AggregatingIssueTracker>() }

@@ -118,7 +118,7 @@ class SynchronousActionDispatcher(
             logger.error(it) { "It was not possible to close issue: ${action.request}" }
         }.onSuccess {
             logger.info { "Issue #${action.request.issueId} closed." }
-            dispatch(SendTextAction("Issue ${action.request.issueId} closed.", action.client))
+            dispatch(SendTextAction("Issue #${action.request.issueId} closed.", action.client))
         }
     }
 
