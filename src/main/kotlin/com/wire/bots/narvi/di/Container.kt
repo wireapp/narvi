@@ -7,7 +7,7 @@ import com.wire.bots.narvi.dispatch.SynchronousActionDispatcher
 import com.wire.bots.narvi.processor.CommandsProcessor
 import com.wire.bots.narvi.processor.DummyCommandsProcessor
 import com.wire.bots.narvi.server.MessageHandler
-import com.wire.bots.narvi.server.resources.GitHubResource
+import com.wire.bots.narvi.server.resources.GithubResource
 import com.wire.bots.narvi.tracking.AggregatingIssueTracker
 import com.wire.bots.narvi.tracking.IssueTracker
 import com.wire.bots.narvi.tracking.github.GithubIssueTracker
@@ -65,7 +65,7 @@ fun buildDiContainer(additionalRegistration: Kodein.MainBuilder.() -> Unit) =
         bind() from singleton { GithubIssueTracker(instance()) }
         bind() from singleton { GithubWebhookHandler(instance(), instance(), instance(), instance()) }
         bind() from singleton { GithubWebhookValidator(instance(GITHUB_SIGNING_SECRET)) }
-        bind() from singleton { GitHubResource(instance(), instance()) }
+        bind() from singleton { GithubResource(instance(), instance()) }
         bind() from singleton { AggregatingIssueTracker(instance()) }
         // select default tracking system
         bind<IssueTracker>() with singleton { instance<AggregatingIssueTracker>() }

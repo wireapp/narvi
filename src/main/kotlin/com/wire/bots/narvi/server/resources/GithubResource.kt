@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/hooks/github")
-class GitHubResource(
+class GithubResource(
     private val handler: GithubWebhookHandler,
     private val validator: GithubWebhookValidator
 ) {
