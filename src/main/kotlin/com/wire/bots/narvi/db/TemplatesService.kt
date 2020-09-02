@@ -4,8 +4,10 @@ import com.wire.bots.narvi.db.dto.TemplateDto
 import com.wire.bots.narvi.db.model.IssueTracker
 import com.wire.bots.narvi.db.model.Templates
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class TemplatesService(private val db: Database) {
@@ -15,14 +17,12 @@ class TemplatesService(private val db: Database) {
             Templates
                 .select { Templates.trigger eq trigger }
                 .singleOrNull()
-                ?.let {
-                    TemplateDto(
-                        id = it[Templates.id],
-                        issueTracker = it[Templates.issueTracker],
-                        repository = it[Templates.trackerRepository],
-                        trigger = it[Templates.trigger]
-                    )
-                }
+                ?.toTemplateDto()
+        }
+
+    fun getTemplates() =
+        transaction(db) {
+            Templates.selectAll().map { it.toTemplateDto() }
         }
 
     fun insertTemplate(
@@ -37,4 +37,13 @@ class TemplatesService(private val db: Database) {
                 it[this.trigger] = trigger
             }
         }
+
+    private fun ResultRow.toTemplateDto() =
+        TemplateDto(
+            id = this[Templates.id],
+            issueTracker = this[Templates.issueTracker],
+            repository = this[Templates.trackerRepository],
+            trigger = this[Templates.trigger]
+        )
+
 }

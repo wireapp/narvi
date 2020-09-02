@@ -57,6 +57,9 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-jdbc", exposedVersion)
     implementation("org.jetbrains.exposed", "exposed-java-time", exposedVersion)
 
+    // nicely formatted tables
+    implementation("de.m3y.kformat", "kformat", "0.7")
+
     // testing
     val junitVersion = "5.6.2"
     testImplementation("org.junit.jupiter", "junit-jupiter-api", junitVersion)

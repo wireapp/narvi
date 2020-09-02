@@ -12,7 +12,10 @@ import com.wire.bots.narvi.tracking.CreateTemplateRequest
 import com.wire.bots.narvi.tracking.TextSendRequest
 import com.wire.bots.narvi.tracking.TrackingRequest
 import com.wire.bots.sdk.models.TextMessage
+import de.m3y.kformat.Table
+import de.m3y.kformat.table
 import mu.KLogging
+import pw.forst.tools.katlib.newLine
 import pw.forst.tools.katlib.whenNull
 
 /**
@@ -35,12 +38,33 @@ class DummyCommandsProcessor(
             text.startsWith(CLOSE_ISSUE_TRIGGER) -> closeIssue(message)
             text.startsWith(CREATE_TEMPLATE_TRIGGER) -> createTemplate(message)
             text.startsWith(HELP_TRIGGER) -> sendHelpText()
+            text.startsWith(LIST_TEMPLATES_TRIGGER) -> listTemplates()
             else -> commentRequest(message, narviWireClient)
         }.let {
             // maybe some resolver failed and thus it is a comment
             if (it.isNotEmpty()) it
             else commentRequest(message, narviWireClient)
         }
+    }
+
+    private fun listTemplates(): Collection<TrackingRequest> {
+        val templates = templatesService.getTemplates()
+        // render table
+        val render = table {
+            header("Trigger", "Issue Tracker", "Repository")
+
+            templates.forEach {
+                row(it.trigger, it.issueTracker.name, it.repository)
+            }
+
+            hints {
+                borderStyle = Table.BorderStyle.SINGLE_LINE
+            }
+        }.render(StringBuilder()).toString().trim()
+
+        return listOf(
+            TextSendRequest("```$newLine$render$newLine```")
+        )
     }
 
     private fun createTemplate(message: TextMessage): Collection<TrackingRequest> {
@@ -124,6 +148,7 @@ class DummyCommandsProcessor(
                     **${CREATE_TEMPLATE_TRIGGER.trim()}** - creates a new template for the issues
                     **${CREATE_ISSUE_TRIGGER.trim()}** - creates a new issue
                     **$CLOSE_ISSUE_TRIGGER** - closes issue associated with the conversation
+                    **$LIST_TEMPLATES_TRIGGER** - display all templates in the database
                     **$HELP_TRIGGER** - displays this help
                     
                     Commands parameters syntax:
