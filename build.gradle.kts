@@ -1,6 +1,6 @@
 plugins {
     java
-    kotlin("jvm") version "1.4.0"
+    kotlin("jvm") version "1.4.21"
     application
     id("net.nemerosa.versioning") version "2.8.2"
     id("com.github.johnrengelman.shadow") version "6.0.0"
@@ -27,7 +27,7 @@ repositories {
 
 
 dependencies {
-    implementation("pw.forst.tools", "katlib", "1.1.1")
+    implementation("pw.forst.tools", "katlib", "1.2.1")
 
     implementation("com.wire.bots", "lithium", "2.36.5") {
         // we're replacing it with newer version as the one included in Lithium has problems with JRE 11
@@ -35,7 +35,7 @@ dependencies {
     }
     implementation("com.google.protobuf", "protobuf-java", "3.12.4")
     // because jackson kotlin have a bit older lib
-    implementation("org.jetbrains.kotlin", "kotlin-reflect", "1.4.0")
+    implementation("org.jetbrains.kotlin", "kotlin-reflect", "1.4.21")
 
     // logging
     implementation("io.github.microutils", "kotlin-logging", "1.7.9")
